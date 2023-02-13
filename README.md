@@ -1,3 +1,7 @@
+Topkey
+
+當PLM創建料號時檢查該料的成分欄位,裡面會輸入禁用的cas no,多個會由逗號做分隔.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -27,6 +31,20 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## Deploy on BPM
+Deploy在topkey BPM中必須build為靜態檔案:
+```bash
+npm run buildx
+```
+請參考 package.json中的這一段:
+```json 
+{
+    ...
+    "buildx": "next build && next export"
+    ...
+}
+
+```
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
