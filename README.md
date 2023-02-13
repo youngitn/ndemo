@@ -1,6 +1,11 @@
-Topkey
+# Topkey 禁用物料資訊管理介面 for PLM
 
 當PLM創建料號時檢查該料的成分欄位,裡面會輸入禁用的cas no,多個會由逗號做分隔.
+這支專案是用來讓user上傳excel資料後匯入BPM DB中的資料表,讓user有個介面能夠查詢禁用物料的資訊.
+
+__簡而言之就是用來維護給PLM做cas no查核的資料__
+
+使用資料表:  `disable_material_data`
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
