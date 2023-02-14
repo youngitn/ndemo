@@ -37,7 +37,7 @@ const DataTable = () => {
             setTableData(retData);
         });
         //return () => { alert('ok') }
-    }, [tableData])
+    }, [])
     const handleCreateNewRow = (values: DisableMaterialData) => {
         tableData.push(values);
         setTableData([...tableData]);
