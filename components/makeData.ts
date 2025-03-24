@@ -4,7 +4,7 @@ import { DisableMaterialData } from '../model/DisableMaterialData';
 export const callAPI = async () => {
     try {
         const postbody = { version: 197 };
-        const res = await fetch(`/main-main/routes.php/DisableMaterialData/getData/`,
+        const res = await fetch(`/main-main/routes.php/DisableMaterialData/getDataTK/`,
             {
                 method: 'POST',
                 headers: {
@@ -17,7 +17,7 @@ export const callAPI = async () => {
         );
         const resdata = await res.json();
         //setTableData(resdata);
-
+        console.log(resdata);
         return resdata;
     } catch (err) {
         console.log(err);
@@ -37,6 +37,7 @@ export const data: DisableMaterialData[] = [
         name_cn: '名稱1',
         ppm_limit: '1000',
         suitable_for: 'ASUS',
+        branch: 'KT',
     },
     {
         id: '2',
@@ -46,6 +47,7 @@ export const data: DisableMaterialData[] = [
         name_cn: '名稱2',
         ppm_limit: '1500',
         suitable_for: 'ACER',
+        branch:'VN'
     },
 
 ];

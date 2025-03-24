@@ -6,4 +6,5 @@ export type DisableMaterialData = {
     name_cn: string,
     ppm_limit: string,
     suitable_for: string,
+    branch: string,
 };

@@ -33,8 +33,8 @@ const DataTable = () => {
     }>({});
     useEffect(() => {
         callAPI().then((retData) => {
-
-            setTableData(retData);
+            console.log(retData);
+           setTableData(retData);
         });
         //return () => { alert('ok') }
     }, [])
@@ -173,6 +173,15 @@ const DataTable = () => {
                     )),
                 },
             },
+            
+            {
+                accessorKey: 'branch',
+                header: '分支',
+                muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+                    ...getCommonEditTextFieldProps(cell),
+                    type: 'text',
+                }),
+            },
         ],
         [getCommonEditTextFieldProps],
     );
@@ -223,8 +232,8 @@ const DataTable = () => {
                     //     資料匯入
                     // </Button>
                     <Button variant="contained"
-                        href={"http://bpm.topkey.com.tw/index.php?module=xpWizard&func=plm_disable_material_data_upload"}
-
+                        href={"http://bpm.topkey.com.tw/index.php?module=xpWizard&func=plm_disable_material_data_upload_tk"}
+                        sx={{ backgroundColor: 'red' }}
                     >
                         資料匯入
                     </Button>

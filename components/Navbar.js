@@ -5,8 +5,8 @@ const Navbar = () => {
     return (
         <>
             <AppBar position="static">
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    TOPKEY 禁用物料清單資訊
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 ,backgroundColor: 'red'}}>
+                    [TK] TOPKEY 禁用物料清單資訊
                 </Typography>
             </AppBar>
         </>
