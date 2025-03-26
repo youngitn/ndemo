@@ -4,7 +4,7 @@ import { DisableMaterialData } from '../model/DisableMaterialData';
 export const callAPI = async () => {
     try {
         const postbody = { version: 197 };
-        const res = await fetch(`/main-main/routes.php/DisableMaterialData/getDataTK/`,
+        const res = await fetch(`/main-main/routes.php/DisableMaterialData/getDataVN/`,
             {
                 method: 'POST',
                 headers: {

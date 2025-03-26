@@ -232,8 +232,8 @@ const DataTable = () => {
                     //     資料匯入
                     // </Button>
                     <Button variant="contained"
-                        href={"http://bpm.topkey.com.tw/index.php?module=xpWizard&func=plm_disable_material_data_upload_tk"}
-                        sx={{ backgroundColor: 'red' }}
+                        href={"http://bpm.topkey.com.tw/index.php?module=xpWizard&func=plm_disable_material_data_upload_vn"}
+                        sx={{ backgroundColor: 'green' }}
                     >
                         資料匯入
                     </Button>
