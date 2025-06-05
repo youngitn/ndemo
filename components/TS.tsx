@@ -17,6 +17,7 @@ import {
     Stack,
     TextField,
     Tooltip,
+    CircularProgress
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { ppm_limits, callAPI } from './makeData';
@@ -31,17 +32,54 @@ const DataTable = () => {
     const [validationErrors, setValidationErrors] = useState<{
         [cellId: string]: string;
     }>({});
+    const [isLoadingMoreData, setIsLoadingMoreData] = useState(false); // 新增 state 來表示加載狀態
+    // --- 新增/修改的 State ---
+        const [isLoading, setIsLoading] = useState(true); // 預設為 true，因為一開始就要載入
+    const [dataPerPage] = useState(300); // 每次載入的資料筆數
+
+    // --- 頁面載入時自動載入所有資料 ---
     useEffect(() => {
-        callAPI().then((retData) => {
-            console.log(retData);
-           setTableData(retData);
-        });
-        //return () => { alert('ok') }
-    }, [])
-    const handleCreateNewRow = (values: DisableMaterialData) => {
-        tableData.push(values);
-        setTableData([...tableData]);
-    };
+        const fetchAllData = async () => {
+            setIsLoading(true); // 開始載入
+            let currentOffset = 0;
+            let hasMore = true;
+            let allFetchedData: DisableMaterialData[] = []; // 用來累積所有載入的資料
+
+            try {
+                while (hasMore) {
+                    // 呼叫 API 載入一頁資料
+                    const newPartialData = await callAPI(currentOffset, dataPerPage);
+                    
+                    // 將新載入的資料追加到累積的資料陣列中
+                    allFetchedData = [...allFetchedData, ...newPartialData];
+                    
+                    // 更新下一次載入的偏移量
+                    currentOffset += newPartialData.length;
+
+                    // 如果返回的資料筆數小於每頁的筆數，表示沒有更多了，停止迴圈
+                    if (newPartialData.length < dataPerPage) {
+                        hasMore = false;
+                    }
+                    // 注意：如果 API 剛好返回 dataPerPage 筆，hasMore 仍然是 true，會再進行下一次迴圈
+                }
+                setTableData(allFetchedData); // 將所有資料一次性設定給 tableData
+            } catch (error) {
+                console.error("Failed to load all data:", error);
+                // 處理錯誤，例如顯示錯誤訊息給使用者
+            } finally {
+                setIsLoading(false); // 載入結束
+            }
+        };
+
+        fetchAllData(); // 在組件掛載時立即執行這個函數
+
+        // 清理函數 (如果需要)
+        // return () => { /* 清理任何資源 */ };
+    }, [dataPerPage]); // 依賴 dataPerPage，如果每次載入的筆數改變會重新執行
+    // const handleCreateNewRow = (values: DisableMaterialData) => {
+    //     tableData.push(values);
+    //     setTableData([...tableData]);
+    // };
 
     const handleSaveRowEdits: MaterialReactTableProps<DisableMaterialData>['onEditingRowSave'] =
         async ({ exitEditingMode, row, values }) => {
@@ -185,7 +223,24 @@ const DataTable = () => {
         ],
         [getCommonEditTextFieldProps],
     );
+     // 新增一個函數來處理動態加載更多資料
+    // const loadMoreData = useCallback(async () => {
+    //     if (isLoadingMoreData) return; // 避免重複加載
 
+    //     setIsLoadingMoreData(true);
+    //     try {
+    //         // 假設您的 callAPI 可以接收參數來獲取更多資料 (例如分頁)
+    //         // 這裡只是個範例，您需要根據實際 API 設計來修改
+    //         const newPartialData = await callAPI(0, 10);
+            
+    //         // 將新數據追加到現有數據的末尾
+    //         setTableData((prevData) => [...prevData, ...newPartialData]);
+    //     } catch (error) {
+    //         console.error("Failed to load more data:", error);
+    //     } finally {
+    //         setIsLoadingMoreData(false);
+    //     }
+    // }, [isLoadingMoreData]);
     return (
         <>
             <MaterialReactTable
@@ -223,21 +278,31 @@ const DataTable = () => {
                 //     </Box>
                 // )}
                 renderTopToolbarCustomActions={() => (
-                    // 改成連結按鈕
-                    //<Button
-                    //     color="secondary"
-                    //     onClick={() => setCreateModalOpen(true)}
-                    //     variant="contained"
-                    // >
-                    //     資料匯入
-                    // </Button>
-                    <Button variant="contained"
-                        href={"http://bpm.topkey.com.tw/index.php?module=xpWizard&func=plm_disable_material_data_upload_tk"}
-                        sx={{ backgroundColor: 'red' }}
-                    >
-                        資料匯入
-                    </Button>
-                )}
+                    <Stack direction="row" spacing={1}>
+                        <Button
+                            variant="contained"
+                            href={"http://bpm.topkey.com.tw/index.php?module=xpWizard&func=plm_disable_material_data_upload_tk"}
+                            sx={{ backgroundColor: 'red' }}
+                        >
+                            資料匯入
+                        </Button>
+                         {/* 修改這裡來顯示載入動畫和訊息 */}
+                        {isLoading && (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+                                <CircularProgress />
+                                <p style={{ textAlign: 'center', marginTop: '8px' }}>資料讀取中...</p>
+                            </Box>
+                        )}
+
+                        {!isLoading && tableData.length === 0 && (
+                            <p style={{ textAlign: 'center', marginTop: '16px'  }}>沒有資料。</p>
+                        )}
+
+                        {!isLoading && tableData.length > 0 && (
+                            <p style={{ textAlign: 'center', marginTop: '16px'  }}>所有資料已載入。</p>
+                        )}
+                                </Stack>
+                            )}
                 localization={MRT_Localization_ZH_HANT}
             // localization={{
             //     clearFilter: '清除',
@@ -275,6 +340,8 @@ const DataTable = () => {
                 onClose={() => setCreateModalOpen(false)}
                 onSubmit={handleCreateNewRow}
             /> */}
+             
+            
         </>
     );
 };

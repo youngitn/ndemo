@@ -1,9 +1,15 @@
 import { DisableMaterialData } from '../model/DisableMaterialData';
 
 
-export const callAPI = async () => {
+export const callAPI = async (offset = 0, limit = 10) => { // 設定預設值方便使用
     try {
-        const postbody = { version: 197 };
+        // 將 offset 和 limit 包含在 postbody 中
+        const postbody = {
+            //version: 197, // 您現有的參數
+            offset: offset, // 新增的參數：從哪裡開始
+            limit: limit    // 新增的參數：每次取多少
+        };
+
         const res = await fetch(`/main-main/routes.php/DisableMaterialData/getDataTK/`,
             {
                 method: 'POST',
@@ -13,14 +19,19 @@ export const callAPI = async () => {
                 },
                 body: JSON.stringify(postbody),
             },
-
         );
+
+        if (!res.ok) { // 檢查 HTTP 響應是否成功
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const resdata = await res.json();
-        //setTableData(resdata);
-        console.log(resdata);
+        console.log("Fetched data:", resdata); // 更明確的日誌
         return resdata;
     } catch (err) {
-        console.log(err);
+        console.error("Error in callAPI:", err); // 使用 console.error 記錄錯誤
+        // 根據需求，這裡可以拋出錯誤或返回空陣列
+        return [];
     }
 };
 // export const data = async () => {
